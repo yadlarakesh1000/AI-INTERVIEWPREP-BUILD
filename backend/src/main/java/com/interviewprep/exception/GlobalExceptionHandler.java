@@ -16,6 +16,7 @@ import org.springframework.web.multipart.MaxUploadSizeExceededException;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 import com.interviewprep.common.ApiResponse;
+import com.interviewprep.modules.auth.exception.AuthException;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -28,6 +29,12 @@ public class GlobalExceptionHandler {
         log.warn("Resource not found: {}", ex.getMessage());
         return ResponseEntity.status(HttpStatus.NOT_FOUND)
                 .body(ApiResponse.error(ex.getMessage()));
+    }
+    @ExceptionHandler(AuthException.class)
+   public  ResponseEntity<ApiResponse<Object>> handleAuthException(AuthException ex){
+        log.warn("Auth Exception:{}",
+            ex.getMessage());
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(ApiResponse.error(ex.getMessage()));
     }
 
     @ExceptionHandler(BadRequestException.class)
