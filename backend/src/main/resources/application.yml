@@ -5,7 +5,7 @@ spring:
     # where real environment variables are provided instead).
     import: "optional:file:./.env[.properties]"
   datasource:
-    url: ${DB_URL:jdbc:mysql://localhost:3306/interviewprep}
+    url: ${DB_URL:jdbc:mysql://localhost:3306/interviewprep_1}
     username: ${DB_USERNAME:root}
     password: ${DB_PASSWORD:root}
     driver-class-name: com.mysql.cj.jdbc.Driver

@@ -32,7 +32,7 @@ public class JwtTokenProvider {
   
    public String generateAccessToken(String email,Long userId){
        Date now = new Date();
-       Date expiry = new Date(now.getTime()-accessTokenExpirationMs);
+       Date expiry = new Date(now.getTime()+accessTokenExpirationMs);
        return Jwts.builder().subject(email).claim("UserId", userId).issuedAt(now).expiration(expiry).signWith(key,Jwts.SIG.HS256).compact();
    }
    public String generateRefreshToken(){

@@ -53,7 +53,7 @@ public CorsConfigurationSource corsConfigurationSource(){
    config.setAllowedHeaders(List.of("Authorization", "Content-Type"));
    config.setAllowCredentials(true);
    UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-   source.registerCorsConfiguration("/api**", config);
+   source.registerCorsConfiguration("/api/**", config);
     return source;
 }
 @Bean
