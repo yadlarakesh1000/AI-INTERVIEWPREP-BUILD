@@ -1,6 +1,5 @@
 package com.interviewprep.security;
 
-import java.util.Optional;
 
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

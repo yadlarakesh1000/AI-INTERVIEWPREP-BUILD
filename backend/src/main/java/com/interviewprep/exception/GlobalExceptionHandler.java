@@ -17,6 +17,7 @@ import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 import com.interviewprep.common.ApiResponse;
 import com.interviewprep.modules.auth.exception.AuthException;
+import com.interviewprep.modules.profile.exception.ProfileException;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -99,5 +100,11 @@ public class GlobalExceptionHandler {
         log.error("Unexpected error occurred", ex);
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body(ApiResponse.error("An unexpected error occurred. Please try again later."));
+    }
+      @ExceptionHandler(ProfileException.class)
+    public ResponseEntity<ApiResponse<Object>> handleProfileException(ProfileException ex) {
+        log.warn("Profile error: {}", ex.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(ApiResponse.error(ex.getMessage()));
     }
 }
