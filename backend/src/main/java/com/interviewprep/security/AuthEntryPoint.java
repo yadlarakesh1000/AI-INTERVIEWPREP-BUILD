@@ -20,7 +20,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class AuthEntryPoint implements AuthenticationEntryPoint {
    
-  private ObjectMapper objectMapper;
+  private final ObjectMapper objectMapper;
    
   @Override
   public void commence(HttpServletRequest request,
