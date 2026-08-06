@@ -15,6 +15,8 @@ public interface ProfileMapper {
   @Mapping(target="createdAt",ignore = true)
   @Mapping(target="updatedAt",ignore=true)
   UserProfile toEntity(ProfileRequestDto dto);
+
+  
   @Mapping(target = "userId", source = "user.id")
   ProfileResponseDto toDto(UserProfile entity);
 

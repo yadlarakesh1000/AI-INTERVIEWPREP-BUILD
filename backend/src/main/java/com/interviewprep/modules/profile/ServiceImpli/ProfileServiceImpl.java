@@ -24,6 +24,7 @@ public class ProfileServiceImpl implements ProfileService {
  @Override
  @Transactional
  public ProfileResponseDto createProfile(Long userId, ProfileRequestDto request) {
+
  validateStudyDuration(request.getStudyDurationWeeks());
  User user = userRepository.findById(userId)
  .orElseThrow(() -> new ResourceNotFoundException("User", "id", userId));

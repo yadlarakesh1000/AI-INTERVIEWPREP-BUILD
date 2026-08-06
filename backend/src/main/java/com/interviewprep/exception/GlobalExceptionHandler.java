@@ -18,6 +18,7 @@ import org.springframework.web.servlet.resource.NoResourceFoundException;
 import com.interviewprep.common.ApiResponse;
 import com.interviewprep.modules.auth.exception.AuthException;
 import com.interviewprep.modules.profile.exception.ProfileException;
+import com.interviewprep.modules.resume.exception.ResumeException;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -95,16 +96,23 @@ public class GlobalExceptionHandler {
                 .body(ApiResponse.error("Uploaded file is too large. Maximum allowed size is 5MB."));
     }
 
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<ApiResponse<Object>> handleGeneric(Exception ex) {
-        log.error("Unexpected error occurred", ex);
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body(ApiResponse.error("An unexpected error occurred. Please try again later."));
-    }
+   
       @ExceptionHandler(ProfileException.class)
     public ResponseEntity<ApiResponse<Object>> handleProfileException(ProfileException ex) {
         log.warn("Profile error: {}", ex.getMessage());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                 .body(ApiResponse.error(ex.getMessage()));
+    }
+     @ExceptionHandler(ResumeException.class)
+    public ResponseEntity<ApiResponse<Object>> handleResumException(ResumeException ex) {
+        log.warn("Resume error: {}", ex.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(ApiResponse.error(ex.getMessage()));
+    }
+     @ExceptionHandler(Exception.class)
+    public ResponseEntity<ApiResponse<Object>> handleGeneric(Exception ex) {
+        log.error("Unexpected error occurred", ex);
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(ApiResponse.error("An unexpected error occurred. Please try again later."));
     }
 }

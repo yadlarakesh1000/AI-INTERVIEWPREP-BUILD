@@ -5,7 +5,7 @@ import org.springframework.stereotype.Service;
 import com.interviewprep.modules.profile.dto.ProfileRequestDto;
 import com.interviewprep.modules.profile.dto.ProfileResponseDto;
 
-@Service
+
 public interface ProfileService {
   ProfileResponseDto createProfile(Long userId, ProfileRequestDto request);
 ProfileResponseDto getProfile(Long userId);
