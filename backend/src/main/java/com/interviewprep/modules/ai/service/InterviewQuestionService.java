@@ -2,6 +2,7 @@ package com.interviewprep.modules.ai.service;
 
 import java.util.List;
 
+import com.interviewprep.modules.ai.dto.QAPair;
 import com.interviewprep.modules.ai.dto.ResumeData;
 
 public interface InterviewQuestionService {
