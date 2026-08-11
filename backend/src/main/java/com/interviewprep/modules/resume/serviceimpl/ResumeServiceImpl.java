@@ -13,9 +13,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.interviewprep.exception.BadRequestException;
 import com.interviewprep.exception.ResourceNotFoundException;
+import com.interviewprep.modules.ai.dto.ResumeData;
+import com.interviewprep.modules.ai.service.ResumeParsingService;
 import com.interviewprep.modules.auth.entity.User;
 import com.interviewprep.modules.auth.repository.UserRepository;
 import com.interviewprep.modules.resume.Repository.ResumeRepository;
@@ -37,6 +40,8 @@ private static final long MAX_FILE_SIZE_BYTES = 5L * 1024 * 1024;
 private final ResumeRepository resumeRepository;
 private final UserRepository userRepository;
 private final ResumeMapper resumeMapper;
+private final ResumeParsingService resumeParsingService;
+private final ObjectMapper objectMapper;
 @Value("${app.resume.upload-dir}") 
 private String uploadDir;
       
@@ -49,12 +54,14 @@ public ResumeResponseDto uploadResume(Long userId,MultipartFile file){
     String storedName = System.currentTimeMillis()+"_"+originalName;
     String storedPath = storeFile(file,userId,storedName);
     String extractedText = extractText(file);
-    
+    ResumeData parsedData = resumeParsingService.parseResumeText(extractedText);
+    String parsedJson = toJson(parsedData);
     Resume resume = Resume.builder()
                           .user(user)
                           .fileName(originalName)
                           .filePath(storedPath)
                           .extractedText(extractedText)
+                          .parsedData(parsedJson)
                           .build();
     Resume saved = resumeRepository.save(resume);  
     log.info("Uploaded resume id={} for userId={} ({} chars extracted, parsed={})",
@@ -104,7 +111,16 @@ public ResumeResponseDto uploadResume(Long userId,MultipartFile file){
  throw new ResumeException("Could not read the PDF file. Please upload a valid PDF.", ex);
  }
  }
-
+    private String toJson(ResumeData data){
+        if(data==null) return null;
+        try{
+            return objectMapper.writeValueAsString(data);
+        }
+        catch(JsonProcessingException ex){
+            log.error("failed to serialze parsed resume data to json",ex);
+            return null;
+        }
+    }
 private String sanitizeFileName(String originalFilename) {
  if (originalFilename == null || originalFilename.isBlank()) {
  return "resume.pdf";
