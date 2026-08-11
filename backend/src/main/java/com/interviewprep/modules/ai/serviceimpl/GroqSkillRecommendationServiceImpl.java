@@ -83,12 +83,12 @@ public class GroqSkillRecommendationServiceImpl implements SkillRecommendationSe
     }
   private SkillRecommendationResponse parseRecommendations(String content) throws Exception{
     JsonNode root = objectMapper.readTree(extractJsonObject(content));
-    JsonNode recommendationNode = root.path("recommandations");
+    JsonNode recommendationNode = root.path("recommendations");
     List<SkillSuggestion> suggestions = new ArrayList<>();
      if(recommendationNode.isArray()){
       recommendationNode.forEach(node -> {
-        String skill = readText(node.path("skills"));
-        String reason = readText(node.path("reasons"));
+        String skill = readText(node.path("skill"));
+        String reason = readText(node.path("reason"));
         if(skill != null){
             suggestions.add(SkillSuggestion.builder().skill(skill).reason(reason).build());
         }

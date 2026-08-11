@@ -182,7 +182,7 @@ public class PdfBoxGroqResumeParsingServiceImpl implements ResumeParsingService 
           messages.add(Map.of("role","user","content",userContent));
           Map<String,Object> body = Map.of(
                                  "model",groqConfig.getModel(),
-                                 "temparature",PARSE_TEMPARATURE,
+                                 "temperature",PARSE_TEMPARATURE,
                                  "response_format",Map.of("type","json_object"),
                                  "messages",messages
           );
