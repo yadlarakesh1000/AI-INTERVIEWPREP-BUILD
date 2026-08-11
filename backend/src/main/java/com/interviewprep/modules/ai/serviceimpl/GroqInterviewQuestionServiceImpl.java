@@ -19,9 +19,9 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.interviewprep.exception.BadRequestException;
 import com.interviewprep.modules.ai.config.GroqConfig;
-import com.interviewprep.modules.ai.dto.QAPair;
 import com.interviewprep.modules.ai.dto.ResumeData;
 import com.interviewprep.modules.ai.service.InterviewQuestionService;
+import com.interviewprep.modules.interviewsession.model.QAPair;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

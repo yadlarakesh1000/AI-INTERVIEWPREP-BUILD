@@ -1,4 +1,6 @@
-package com.interviewprep.modules.ai.dto;
+package com.interviewprep.modules.interviewsession.model;
+
+import com.interviewprep.modules.ai.dto.EvaluationResult;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
