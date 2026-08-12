@@ -60,6 +60,7 @@ private final ObjectMapper objectMapper;
           log.debug("Gemini TTS request -> model={}, {} chars", TTS_MODEL, text.length());
           int attempt = 0;
           while(true){
+            attempt++;
             try{
               ResponseEntity<String> response = geminiRestTemplate.postForEntity(url, request, String.class);
               return parseAudio(response.getBody());
@@ -77,7 +78,7 @@ private final ObjectMapper objectMapper;
   
   }
 }
-// extract audio from the text 
+
   private byte[] parseAudio(String body) {
            try{
             JsonNode inlineData = objectMapper.readTree(body)
@@ -89,7 +90,7 @@ private final ObjectMapper objectMapper;
               log.error("Gemini TTS response contained no audio data; returning null for browser fallback");
               return null;
            }
-           String mimeType = inlineData.path("mimeTpe").asText("");
+           String mimeType = inlineData.path("mimeType").asText("");
            int sampleRate = parseSampleRate(mimeType);
            byte[] pcm = Base64.getDecoder().decode(base64Audio);
            

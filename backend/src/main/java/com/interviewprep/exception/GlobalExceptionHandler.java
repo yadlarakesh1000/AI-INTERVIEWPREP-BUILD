@@ -16,6 +16,7 @@ import org.springframework.web.multipart.MaxUploadSizeExceededException;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 import com.interviewprep.common.ApiResponse;
+import com.interviewprep.modules.Interview.exception.InterviewException;
 import com.interviewprep.modules.auth.exception.AuthException;
 import com.interviewprep.modules.profile.exception.ProfileException;
 import com.interviewprep.modules.resume.exception.ResumeException;
@@ -88,7 +89,12 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.NOT_FOUND)
                 .body(ApiResponse.error("The requested resource was not found."));
     }
-
+            @ExceptionHandler(InterviewException.class)
+    public ResponseEntity<ApiResponse<Object>> handleInterviewException(InterviewException ex) {
+        log.warn("Interview error: {}", ex.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(ApiResponse.error(ex.getMessage()));
+    }
     @ExceptionHandler(MaxUploadSizeExceededException.class)
     public ResponseEntity<ApiResponse<Object>> handleMaxUploadSize(MaxUploadSizeExceededException ex) {
         log.warn("Upload size exceeded: {}", ex.getMessage());

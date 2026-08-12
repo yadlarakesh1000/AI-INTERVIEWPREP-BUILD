@@ -22,10 +22,9 @@ import com.interviewprep.modules.ai.dto.ResumeData;
 import com.interviewprep.modules.ai.dto.ResumeData.ExperienceInfo;
 import com.interviewprep.modules.ai.dto.ResumeData.ProjectInfo;
 import com.interviewprep.modules.ai.service.ResumeParsingService;
-import com.interviewprep.modules.resume.entity.Resume;
 
 import lombok.RequiredArgsConstructor;
-import lombok.val;
+
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j

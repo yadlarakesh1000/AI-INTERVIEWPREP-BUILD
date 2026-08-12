@@ -170,16 +170,6 @@ public class GroqSkillRecommendationServiceImpl implements SkillRecommendationSe
             throw new BadRequestException("AI service temporarily unavailable. Please try again in a moment.");
          }
     }
-
-
-
-
-
-
-
-
-
-
   
     }
   
