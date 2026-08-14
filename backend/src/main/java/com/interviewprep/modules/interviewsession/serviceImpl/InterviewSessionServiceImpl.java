@@ -42,10 +42,28 @@ public class InterviewSessionServiceImpl implements InterviewSessionService{
         return session;
     }
     @Override
-    public InterviewSession getByInterviewId(Long interviewId) {
-         return activeSessions.values().stream().filter(session -> interviewId!=null && interviewId.equals(session.getInterviewId())).findFirst().orElseThrow(() -> new ResourceNotFoundException("interviewSession","InterviewId",interviewId));
+  public InterviewSession getByInterviewId(Long interviewId) {
 
+    if (interviewId == null) {
+        throw new ResourceNotFoundException(
+            "interviewSession",
+            "InterviewId",
+            interviewId
+        );
     }
+
+    for (InterviewSession session : activeSessions.values()) {
+        if (interviewId.equals(session.getInterviewId())) {
+            return session;
+        }
+    }
+
+    throw new ResourceNotFoundException(
+        "interviewSession",
+        "InterviewId",
+        interviewId
+    );
+}
      
     @Override
     public void updateSession(String sessionId, InterviewSession session) {
@@ -61,13 +79,20 @@ public class InterviewSessionServiceImpl implements InterviewSessionService{
          }
     }
     @Override
-    public boolean hasActiveSession(Long userId) {
-        if(userId == null){
-          return false;
-        }
-        return activeSessions.values().stream()
-                .anyMatch(session -> userId.equals(session.getUserId()));
+   public boolean hasActiveSession(Long userId) {
+
+    if (userId == null) {
+        return false;
     }
+
+    for (InterviewSession session : activeSessions.values()) {
+        if (userId.equals(session.getUserId())) {
+            return true;
+        }
+    }
+
+    return false;
+}
      @Scheduled(fixedRate = 1_800_000)
     public void cleanupStaleSession(){
       LocalDateTime cutoff = LocalDateTime.now().minusHours(SESSION_MAX_HOURS);

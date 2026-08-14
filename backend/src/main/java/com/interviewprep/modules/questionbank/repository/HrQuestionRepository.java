@@ -11,5 +11,5 @@ public interface HrQuestionRepository extends JpaRepository<HrQuestion,Long> {
 List<HrQuestion> findByDifficulty(String difficulty);
 List<HrQuestion> findByCategoryAndDifficulty(String category,String difficulty);
 
- long countByDifficulty(String difficulty); 
+ long countByDifficulty(String difficulty);
 }
