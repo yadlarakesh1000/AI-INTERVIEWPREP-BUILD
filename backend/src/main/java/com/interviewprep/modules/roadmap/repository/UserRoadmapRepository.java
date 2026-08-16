@@ -9,7 +9,7 @@ import com.interviewprep.modules.roadmap.entity.UserRoadmap;
 
 public interface UserRoadmapRepository 
             extends JpaRepository<UserRoadmap,Long>{
-Optional<UserRoadmap> findByUserIdAndIsActive(Long userId);
+Optional<UserRoadmap> findByUserIdAndIsActiveTrue(Long userId);
 List<UserRoadmap> findByUserIdAndRoadmapTemplateIdOrderByIdAsc(Long userId,Long roadmapTemplateId);
   
 }

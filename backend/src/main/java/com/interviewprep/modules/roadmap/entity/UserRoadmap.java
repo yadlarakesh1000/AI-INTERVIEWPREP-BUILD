@@ -13,10 +13,14 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Data;
+
 import lombok.NoArgsConstructor;
+
 
 @Entity
 @Table(name="user_roadmaps")
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
@@ -40,5 +44,5 @@ public class UserRoadmap {
   @Column(name="started_at",updatable =false)
   private LocalDateTime startedAt;
   @Column(name="is_active", nullable=false)
-  private boolean isActive;
+  private Boolean isActive;
 }
