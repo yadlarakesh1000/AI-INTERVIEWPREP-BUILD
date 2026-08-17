@@ -4,7 +4,7 @@ import com.interviewprep.modules.skilltracker.dto.DayToggleRequest;
 import com.interviewprep.modules.skilltracker.dto.SkillTrackerOverviewDto;
 import com.interviewprep.modules.skilltracker.dto.weekProgressDto;
 
-public interface SkiilTrackerService {
+public interface SkillTrackerService {
 
 
 

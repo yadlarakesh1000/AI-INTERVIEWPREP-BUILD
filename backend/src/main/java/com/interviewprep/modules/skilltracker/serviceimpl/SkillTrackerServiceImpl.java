@@ -23,7 +23,7 @@ import com.interviewprep.modules.skilltracker.dto.weekProgressDto.DayDto;
 import com.interviewprep.modules.skilltracker.entity.DayProgress;
 import com.interviewprep.modules.skilltracker.mapper.SkillTrackerMapper;
 import com.interviewprep.modules.skilltracker.repository.DayProgressRepository;
-import com.interviewprep.modules.skilltracker.service.SkiilTrackerService;
+import com.interviewprep.modules.skilltracker.service.SkillTrackerService;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -31,7 +31,7 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 @Slf4j
 @RequiredArgsConstructor
-public class SkillTrackerServiceImpl implements SkiilTrackerService {
+public class SkillTrackerServiceImpl implements SkillTrackerService {
         
   private final int DAYS_PER_WEEK = 7;
   private final UserRoadmapRepository userRoadmapRepository;
