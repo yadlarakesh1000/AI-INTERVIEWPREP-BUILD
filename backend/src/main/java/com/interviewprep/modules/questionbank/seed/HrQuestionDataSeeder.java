@@ -23,7 +23,7 @@ public class HrQuestionDataSeeder implements CommandLineRunner {
   @Override
   public void run(String... args) throws Exception {
              if(hrQuestionRepository.count()>0){
-              log.debug("HR question bank already seeded({} questions);skipping", hrQuestionRepository.count());
+              log.debug("HR question bank already seeded ({} questions); skipping", hrQuestionRepository.count());
               return ;
              }
              List<HrQuestion> questions = new ArrayList<>();

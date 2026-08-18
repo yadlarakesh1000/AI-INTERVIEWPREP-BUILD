@@ -1,4 +1,4 @@
-package com.interviewprep.modules.resume.Repository;
+package com.interviewprep.modules.resume.repository;
 
 
 import java.util.Optional;

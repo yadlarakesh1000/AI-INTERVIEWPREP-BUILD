@@ -39,7 +39,7 @@ public class UserRoadmap {
    @JoinColumn(name= "roadmap_template_id",nullable =false)
   private RoadmapTemplate roadmapTemplate;
    @Column(name="selected_duration_weeks", nullable=false)
-  private int selectedDurationWeeks;
+  private Integer selectedDurationWeeks;
   @CreationTimestamp
   @Column(name="started_at",updatable =false)
   private LocalDateTime startedAt;

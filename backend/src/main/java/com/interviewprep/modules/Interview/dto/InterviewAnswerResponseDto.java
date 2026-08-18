@@ -1,4 +1,4 @@
-package com.interviewprep.modules.Interview.dto;
+package com.interviewprep.modules.interview.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.interviewprep.modules.ai.dto.EvaluationResult;

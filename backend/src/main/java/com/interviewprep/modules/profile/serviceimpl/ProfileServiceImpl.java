@@ -1,4 +1,4 @@
-package com.interviewprep.modules.profile.ServiceImpli;
+package com.interviewprep.modules.profile.serviceimpl;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

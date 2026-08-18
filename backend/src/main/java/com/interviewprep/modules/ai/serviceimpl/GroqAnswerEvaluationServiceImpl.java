@@ -61,7 +61,7 @@ public class GroqAnswerEvaluationServiceImpl implements AnswerEvaluationService 
   }
 
   @Override
-  public List<String> generateImprovementSuggestionsList(List<EvaluationResult> evaluations) {
+  public List<String> generateImprovementSuggestions(List<EvaluationResult> evaluations) {
              if (evaluations == null || evaluations.isEmpty()) {
             return new ArrayList<>();
         }

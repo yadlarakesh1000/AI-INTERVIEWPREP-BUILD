@@ -1,4 +1,4 @@
-package com.interviewprep.modules.questionbank.serviceImpl;
+package com.interviewprep.modules.questionbank.serviceimpl;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -21,10 +21,10 @@ import lombok.extern.slf4j.Slf4j;
 public class QuestionBankServiceImpl implements QuestionBankService{
             private final HrQuestionRepository hrQuestionRepository;
 @Override
-  public HrQuestion getrandomQuestion(String difficulty, List<Long> excludeIds) {
+  public HrQuestion getRandomQuestion(String difficulty, List<Long> excludeIds) {
              List<HrQuestion> all = hrQuestionRepository.findByDifficulty(difficulty);
               if(all == null || all.isEmpty()){
-                log.warn("");
+                log.warn("No HR questions found for difficulty={}", difficulty);
                 return null;
               }
               Set<Long> exclude = excludeIds == null

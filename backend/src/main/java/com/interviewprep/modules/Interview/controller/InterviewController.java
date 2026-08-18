@@ -1,4 +1,4 @@
-package com.interviewprep.modules.Interview.controller;
+package com.interviewprep.modules.interview.controller;
 
 import java.io.IOException;
 
@@ -16,11 +16,11 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.interviewprep.common.ApiResponse;
 import com.interviewprep.exception.BadRequestException;
-import com.interviewprep.modules.Interview.dto.InterviewAnswerResponseDto;
-import com.interviewprep.modules.Interview.dto.InterviewResponseDto;
-import com.interviewprep.modules.Interview.dto.InterviewStartRequest;
-import com.interviewprep.modules.Interview.dto.InterviewSummaryDto;
-import com.interviewprep.modules.Interview.service.InterviewService;
+import com.interviewprep.modules.interview.dto.InterviewAnswerResponseDto;
+import com.interviewprep.modules.interview.dto.InterviewResponseDto;
+import com.interviewprep.modules.interview.dto.InterviewStartRequest;
+import com.interviewprep.modules.interview.dto.InterviewSummaryDto;
+import com.interviewprep.modules.interview.service.InterviewService;
 import com.interviewprep.modules.interviewsession.model.InterviewSession;
 import com.interviewprep.modules.interviewsession.service.InterviewSessionService;
 import com.interviewprep.security.SecurityUtils;

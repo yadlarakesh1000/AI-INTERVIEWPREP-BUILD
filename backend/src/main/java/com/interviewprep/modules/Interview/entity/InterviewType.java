@@ -1,4 +1,4 @@
-package com.interviewprep.modules.Interview.entity;
+package com.interviewprep.modules.interview.entity;
 
 public enum InterviewType {
       HR,

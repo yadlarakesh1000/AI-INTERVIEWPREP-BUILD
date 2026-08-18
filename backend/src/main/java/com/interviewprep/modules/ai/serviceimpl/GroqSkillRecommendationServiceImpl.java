@@ -95,7 +95,7 @@ public class GroqSkillRecommendationServiceImpl implements SkillRecommendationSe
       });
      } 
       if(suggestions.isEmpty()){
-        throw new IllegalStateException("No recommendations found in LLM Response");
+        throw new IllegalStateException("No recommendations found in LLM response");
       }
         log.debug("Parsed {} skill recommendations", suggestions.size());
         return SkillRecommendationResponse.builder().recommendations(suggestions).build();
@@ -110,11 +110,15 @@ public class GroqSkillRecommendationServiceImpl implements SkillRecommendationSe
     }
     private String extractJsonObject(String content){
         if(content == null){
-          throw new IllegalStateException("Empty Skill recommandations");
+          throw new IllegalStateException("Empty skill recommendation content");
         }
         String cleaned =  content.replace("```json", "").replace("```", "").trim();
+       
         int start =cleaned.indexOf("{");
         int end = cleaned.lastIndexOf("}");
+         if(start<0 || start>=end){
+           throw new IllegalStateException("No JSON object found in skill recommendation content");
+        }
         return cleaned.substring(start, end+1);
     }
     private String callGroqChat(String userContent){

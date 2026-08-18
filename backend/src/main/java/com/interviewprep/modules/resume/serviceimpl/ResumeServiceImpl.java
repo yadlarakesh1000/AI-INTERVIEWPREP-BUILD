@@ -21,7 +21,7 @@ import com.interviewprep.modules.ai.dto.ResumeData;
 import com.interviewprep.modules.ai.service.ResumeParsingService;
 import com.interviewprep.modules.auth.entity.User;
 import com.interviewprep.modules.auth.repository.UserRepository;
-import com.interviewprep.modules.resume.Repository.ResumeRepository;
+import com.interviewprep.modules.resume.repository.ResumeRepository;
 import com.interviewprep.modules.resume.dto.ResumeResponseDto;
 import com.interviewprep.modules.resume.entity.Resume;
 import com.interviewprep.modules.resume.exception.ResumeException;
@@ -77,7 +77,7 @@ public ResumeResponseDto uploadResume(Long userId,MultipartFile file){
     }
     private void validateFile(MultipartFile file){
         if(file==null || file.isEmpty()){
-            throw new BadRequestException("Resume file is required");
+            throw new BadRequestException("Resume file is required.");
         }
         if(file.getSize()>MAX_FILE_SIZE_BYTES){
             throw new BadRequestException("File size must not exceeds  5MB");
@@ -87,7 +87,7 @@ public ResumeResponseDto uploadResume(Long userId,MultipartFile file){
         boolean isPdf = "application/pdf".equalsIgnoreCase(contentType)||
                         (name !=null && name.toLowerCase().endsWith(".pdf"));
         if(!isPdf){
-            throw new BadRequestException("Only Pdf files are accepted");
+            throw new BadRequestException("Only PDF files are accepted.");
         }
     }
         private String storeFile(MultipartFile file, Long userId, String storedName) {
@@ -117,7 +117,7 @@ public ResumeResponseDto uploadResume(Long userId,MultipartFile file){
             return objectMapper.writeValueAsString(data);
         }
         catch(JsonProcessingException ex){
-            log.error("failed to serialze parsed resume data to json",ex);
+            log.error("Failed to serialize parsed resume data to JSON",ex);
             return null;
         }
     }

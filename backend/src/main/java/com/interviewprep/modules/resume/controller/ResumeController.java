@@ -35,6 +35,6 @@ public class ResumeController {
     @GetMapping("/latest")
   public ResponseEntity<ApiResponse<ResumeResponseDto>> getLatestResume(){
       ResumeResponseDto resume = resumeService.getLatestResume(SecurityUtils.getCurrentUserId());
- return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.success("Resume uploaded and parsed successfully", resume)); 
+ return ResponseEntity.ok(ApiResponse.success("Latest resume fetched", resume));
   }
 }

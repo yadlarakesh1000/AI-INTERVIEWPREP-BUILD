@@ -36,10 +36,10 @@ public class Resume {
     @ManyToOne(fetch=FetchType.LAZY,optional=false)
     @JoinColumn(name="user_id",nullable=false)
     private User user;
-    @Column(name="file_path",nullable=false,length=500)
-    private String filePath;
     @Column(name="file_name",nullable=false)
     private String fileName;
+    @Column(name="file_path",nullable=false,length=500)
+    private String filePath;
     @Column(name="extracted_text",columnDefinition="TEXT")
     private String extractedText;
     @Column(name="parsed_data",columnDefinition="JSON")

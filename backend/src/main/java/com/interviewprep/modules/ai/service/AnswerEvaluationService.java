@@ -6,7 +6,7 @@ import com.interviewprep.modules.ai.dto.EvaluationResult;
 
 public interface AnswerEvaluationService {
        public EvaluationResult evaluateAnswer(String question,String answer,String interviewType,String difficulty);
-       public List<String> generateImprovementSuggestionsList(List<EvaluationResult> evaluations);
+       public List<String> generateImprovementSuggestions(List<EvaluationResult> evaluations);
       
 }
 

@@ -1,4 +1,4 @@
-package com.interviewprep.modules.Interview.dto;
+package com.interviewprep.modules.interview.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

@@ -5,7 +5,7 @@ import java.util.Collection;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import io.jsonwebtoken.lang.Collections;
+import java.util.Collections;
 
 public class UserPrincipal implements UserDetails{
   

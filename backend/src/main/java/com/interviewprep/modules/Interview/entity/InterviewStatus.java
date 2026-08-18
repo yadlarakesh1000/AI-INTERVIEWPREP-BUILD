@@ -1,7 +1,7 @@
-package com.interviewprep.modules.Interview.entity;
+package com.interviewprep.modules.interview.entity;
 
 public enum InterviewStatus {
        IN_PROGRESS,
        COMPLETED,
-       ABONDED;
+       ABANDONED;
 }

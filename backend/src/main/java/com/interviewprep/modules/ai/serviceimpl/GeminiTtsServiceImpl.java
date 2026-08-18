@@ -75,6 +75,11 @@ private final ObjectMapper objectMapper;
               log.error("Unexpected Gemini TTS error; returning null for browser fallback", ex);
               return null;
           }
+          catch(Exception ex){
+                            log.error("Unexpected Gemini TTS error; returning null for browser fallback", ex);
+
+             return null;
+          }
   
   }
 }

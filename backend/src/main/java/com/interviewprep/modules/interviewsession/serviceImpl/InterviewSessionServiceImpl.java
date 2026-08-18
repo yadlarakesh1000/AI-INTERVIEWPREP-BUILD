@@ -1,4 +1,4 @@
-package com.interviewprep.modules.interviewsession.serviceImpl;
+package com.interviewprep.modules.interviewsession.serviceimpl;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -19,13 +19,13 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 @Slf4j
 public class InterviewSessionServiceImpl implements InterviewSessionService{
-    private static final long SESSION_MAX_HOURS= 2;
+    private static final long SESSION_MAX_AGE_HOURS= 2;
     private final ConcurrentHashMap<String, InterviewSession> activeSessions = new ConcurrentHashMap<>();
     @Override
     public InterviewSession createSession(Long interviewId, Long userId, String type, String difficulty,
         int totalQuestions, ResumeData resumeData, String csTopic) {
       String sessionId = UUID.randomUUID().toString();
-     InterviewSession session =  InterviewSession.builder().sessionId(sessionId).interviewId(interviewId).userId(userId).interviewType(type).difficulty(difficulty).resumeData(resumeData).csTopic(csTopic).currentQuestionNumber(0).history(new ArrayList<>()).askedQuestionIds(new ArrayList<>()).startedAt(LocalDateTime.now()).build();
+     InterviewSession session =  InterviewSession.builder().sessionId(sessionId).interviewId(interviewId).userId(userId).interviewType(type).difficulty(difficulty).resumeData(resumeData).csTopic(csTopic).currentQuestionNumber(0).history(new ArrayList<>()).askedQuestionIds(new ArrayList<>()).startedAt(LocalDateTime.now()).totalQuestions(totalQuestions).build();
        activeSessions.put(sessionId,session);
        log.info("Created interview session {} for userId={} (interviewId={}, type={}, difficulty={})",
                 sessionId, userId, interviewId, type, difficulty);
@@ -94,8 +94,8 @@ public class InterviewSessionServiceImpl implements InterviewSessionService{
     return false;
 }
      @Scheduled(fixedRate = 1_800_000)
-    public void cleanupStaleSession(){
-      LocalDateTime cutoff = LocalDateTime.now().minusHours(SESSION_MAX_HOURS);
+    public void cleanupStaleSessions(){
+      LocalDateTime cutoff = LocalDateTime.now().minusHours(SESSION_MAX_AGE_HOURS);
       int before = activeSessions.size();
        activeSessions.entrySet().removeIf(entry -> {
         LocalDateTime startedAt = entry.getValue().getStartedAt();

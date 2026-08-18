@@ -1,4 +1,4 @@
-package com.interviewprep.modules.Interview.exception;
+package com.interviewprep.modules.interview.exception;
 
 public class InterviewException extends RuntimeException{
   public InterviewException(String message){

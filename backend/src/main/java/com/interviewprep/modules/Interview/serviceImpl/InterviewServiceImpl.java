@@ -1,4 +1,4 @@
-package com.interviewprep.modules.Interview.serviceImpl;
+package com.interviewprep.modules.interview.serviceimpl;
 
 
 import java.math.BigDecimal;
@@ -15,20 +15,20 @@ import com.interviewprep.common.AppConstants;
 import com.interviewprep.exception.BadRequestException;
 import com.interviewprep.exception.ResourceNotFoundException;
 import com.interviewprep.exception.UnauthorizedException;
-import com.interviewprep.modules.Interview.Repository.InterviewRepository;
-import com.interviewprep.modules.Interview.dto.InterviewAnswerResponseDto;
-import com.interviewprep.modules.Interview.dto.InterviewResponseDto;
-import com.interviewprep.modules.Interview.dto.InterviewStartRequest;
-import com.interviewprep.modules.Interview.dto.InterviewSummaryDto;
-import com.interviewprep.modules.Interview.dto.InterviewSummaryDto.QuestionResultDto;
-import com.interviewprep.modules.Interview.dto.QuestionDto;
-import com.interviewprep.modules.Interview.entity.Difficulty;
-import com.interviewprep.modules.Interview.entity.Interview;
-import com.interviewprep.modules.Interview.entity.InterviewStatus;
-import com.interviewprep.modules.Interview.entity.InterviewType;
-import com.interviewprep.modules.Interview.exception.InterviewException;
-import com.interviewprep.modules.Interview.mapper.InterviewMapper;
-import com.interviewprep.modules.Interview.service.InterviewService;
+import com.interviewprep.modules.interview.repository.InterviewRepository;
+import com.interviewprep.modules.interview.dto.InterviewAnswerResponseDto;
+import com.interviewprep.modules.interview.dto.InterviewResponseDto;
+import com.interviewprep.modules.interview.dto.InterviewStartRequest;
+import com.interviewprep.modules.interview.dto.InterviewSummaryDto;
+import com.interviewprep.modules.interview.dto.InterviewSummaryDto.QuestionResultDto;
+import com.interviewprep.modules.interview.dto.QuestionDto;
+import com.interviewprep.modules.interview.entity.Difficulty;
+import com.interviewprep.modules.interview.entity.Interview;
+import com.interviewprep.modules.interview.entity.InterviewStatus;
+import com.interviewprep.modules.interview.entity.InterviewType;
+import com.interviewprep.modules.interview.exception.InterviewException;
+import com.interviewprep.modules.interview.mapper.InterviewMapper;
+import com.interviewprep.modules.interview.service.InterviewService;
 import com.interviewprep.modules.ai.dto.EvaluationResult;
 import com.interviewprep.modules.ai.dto.ResumeData;
 import com.interviewprep.modules.ai.service.AnswerEvaluationService;
@@ -42,10 +42,9 @@ import com.interviewprep.modules.profile.entity.UserProfile;
 import com.interviewprep.modules.profile.repository.UserProfileRepository;
 import com.interviewprep.modules.questionbank.entity.HrQuestion;
 import com.interviewprep.modules.questionbank.service.QuestionBankService;
-import com.interviewprep.modules.resume.Repository.ResumeRepository;
+import com.interviewprep.modules.resume.repository.ResumeRepository;
 import com.interviewprep.modules.resume.entity.Resume;
 
-import jakarta.persistence.criteria.CriteriaBuilder.In;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -93,7 +92,7 @@ public class InterviewServiceImpl implements InterviewService {
            session.getHistory().add(QAPair.builder().questionNumber(questionNumber).question(questionText).build());
            String audioUrl  = synthesizeInto(session,questionText,questionNumber);
            interviewSessionService.updateSession(session.getSessionId(), session);
-            return InterviewResponseDto.builder().interviewId(interview.getId()).sessionId(session.getSessionId()).interviewType(type).difficulty(difficulty).totalQuestions(totalQuestions).currentQuestionNumber(questionNumber).ttsAudioUrl(audioUrl).build();
+            return InterviewResponseDto.builder().interviewId(interview.getId()).sessionId(session.getSessionId()).interviewType(type).difficulty(difficulty).totalQuestions(totalQuestions).currentQuestionNumber(questionNumber).ttsAudioUrl(audioUrl).question(QuestionDto.builder().text(questionText).questionNumber(questionNumber).build()).build();
   }
 
   private String synthesizeInto(InterviewSession session, String questionText, int questionNumber) {
@@ -102,7 +101,7 @@ public class InterviewServiceImpl implements InterviewService {
           if(audio == null || audio.length==0){
             return null;
           }
-          return "/api/interviews/audio"+session.getSessionId()+"/q"+questionNumber;
+          return "/api/interviews/audio/"+session.getSessionId()+"/q"+questionNumber;
 
 
   }
@@ -127,11 +126,11 @@ public class InterviewServiceImpl implements InterviewService {
        return interviewQuestionService.generateQuestion(type, session.getDifficulty(), session.getCsTopic(), context, session.getResumeData());
   }
   private String pickHrQuestion(InterviewSession session) {
-        HrQuestion question = questionBankService.getrandomQuestion(
+        HrQuestion question = questionBankService.getRandomQuestion(
                 session.getDifficulty(), session.getAskedQuestionIds());
         if (question == null && Difficulty.MEDIUM.name().equals(session.getDifficulty())) {
             // Medium interviews may pull an Easy bank question for the opener (Section 15).
-            question = questionBankService.getrandomQuestion(
+            question = questionBankService.getRandomQuestion(
                     Difficulty.EASY.name(), session.getAskedQuestionIds());
         }
         if (question == null) {
@@ -144,7 +143,7 @@ public class InterviewServiceImpl implements InterviewService {
 
   private ResumeData loadLatestResumeData(Long userId) {
     
-       Resume resume = resumeRepository.findTopByUserIdOrderByCreatedAtDesc(userId).orElseThrow(()->new BadRequestException("please upload a resume first"));
+       Resume resume = resumeRepository.findTopByUserIdOrderByCreatedAtDesc(userId).orElseThrow(()->new BadRequestException("Please upload a resume first."));
        String parsed = resume.getParsedData();
        if(parsed == null || parsed.isBlank()){
         return null;
@@ -172,26 +171,26 @@ public class InterviewServiceImpl implements InterviewService {
 
   private String normalizeType(String type) {
         if(type == null ){
-              throw new BadRequestException("interview type required");
+              throw new BadRequestException("interviewType is required.");
         }
         String normalized = type.trim().toUpperCase();
         for(InterviewType t : InterviewType.values()){
              if(t.name().equals(normalized)) return normalized;
         }
-        throw new BadRequestException("Invalid interview Type"+type);
+        throw new BadRequestException("Invalid interview type: " + type);
   }
  @Override
-  public InterviewAnswerResponseDto processAnswer(Long userId, Long interviewId, byte[] audioData, String filname) {
+  public InterviewAnswerResponseDto processAnswer(Long userId, Long interviewId, byte[] audioData, String fileName) {
               InterviewSession session = interviewSessionService.getByInterviewId(interviewId);
-              verifyOwnerShip(session,userId);
+              verifyOwnership(session,userId);
               if(session.getHistory().isEmpty()){
-                throw new InterviewException("No actvie question to answer for this interview");
+                throw new InterviewException("No active question to answer for this interview.");
               }
               QAPair pending  = session.getHistory().get(session.getHistory().size()-1);
               int answeredNumber = pending.getQuestionNumber();
-              String transcrpit = speechToTextService.transcribe(audioData, filname);
-              EvaluationResult evaluation = answerEvaluationService.evaluateAnswer(pending.getQuestion(), transcrpit, session.getInterviewType(), session.getDifficulty());
-              pending.setAnswer(transcrpit);
+              String transcript = speechToTextService.transcribe(audioData, fileName);
+              EvaluationResult evaluation = answerEvaluationService.evaluateAnswer(pending.getQuestion(), transcript, session.getInterviewType(), session.getDifficulty());
+              pending.setAnswer(transcript);
               pending.setEvaluation(evaluation);
               boolean isLastQuestion = answeredNumber >= session.getTotalQuestions();
               QuestionDto nextQuestion = null;
@@ -202,18 +201,18 @@ public class InterviewServiceImpl implements InterviewService {
                 session.setCurrentQuestionNumber(nextNumber);
                 session.getHistory().add(QAPair.builder().questionNumber(nextNumber).question(nextText).build());
               
-              audioUrl = synthesizeInto(session, nextText,answeredNumber);
+              audioUrl = synthesizeInto(session, nextText,nextNumber);
               nextQuestion = QuestionDto.builder().questionNumber(nextNumber).text(nextText).build();
               }
               else{
                 session.setCurrentQuestionAudio(null);
               }
               interviewSessionService.updateSession(session.getSessionId(), session);
-              return InterviewAnswerResponseDto.builder().questionNumber(answeredNumber).transcribedAnswer(transcrpit).evaluation(evaluation).nextQuestion(nextQuestion).ttsAudioUrl(audioUrl).lastQuestion(isLastQuestion).build();
+              return InterviewAnswerResponseDto.builder().questionNumber(answeredNumber).transcribedAnswer(transcript).evaluation(evaluation).nextQuestion(nextQuestion).ttsAudioUrl(audioUrl).lastQuestion(isLastQuestion).build();
   }
   
 
-  private void verifyOwnerShip(InterviewSession session, Long userId) {
+  private void verifyOwnership(InterviewSession session, Long userId) {
                 if(!session.getUserId().equals(userId)){
                 throw new UnauthorizedException("You are not authorized to access this interview.");  
                 }
@@ -223,7 +222,7 @@ public class InterviewServiceImpl implements InterviewService {
   public InterviewSummaryDto endInterview(Long userId, Long interviewId) {
     
         InterviewSession session = interviewSessionService.getByInterviewId(interviewId);
-        verifyOwnerShip(session, userId);
+        verifyOwnership(session, userId);
 
 Interview interview = interviewRepository.findById(interviewId)
                 .orElseThrow(() -> new ResourceNotFoundException("Interview", "id", interviewId));
@@ -235,11 +234,11 @@ Interview interview = interviewRepository.findById(interviewId)
                 }
                 double  overallScore = averageOverall(answered);
                 double confidenceScore = averageConfidenceScore(answered);
-                List<EvaluationResult> evalations = new ArrayList<>();
+                List<EvaluationResult> evaluations = new ArrayList<>();
                 for(QAPair q : answered){
-                    evalations.add(q.getEvaluation());
+                    evaluations.add(q.getEvaluation());
                 }
-                List<String> suggestions = answerEvaluationService.generateImprovementSuggestionsList(evalations);
+                List<String> suggestions = answerEvaluationService.generateImprovementSuggestions(evaluations);
 
             int durationSeconds =  (int)Duration.between(session.getStartedAt(),LocalDateTime.now()).getSeconds();
             interview.setStatus(InterviewStatus.COMPLETED.name());
@@ -296,7 +295,7 @@ Interview interview = interviewRepository.findById(interviewId)
       for(QAPair q :answered){
           total+=q.getEvaluation().getConfidenceScore();
       }
-      return total;
+      return total / answered.size();
   }
 
   private double averageOverall(List<QAPair> answered) {
@@ -307,7 +306,7 @@ Interview interview = interviewRepository.findById(interviewId)
               for(QAPair q :answered){
                   total+= q.getEvaluation().getOverallScore();
               }
-              return total;
+              return total/answered.size();
   }
   
 }

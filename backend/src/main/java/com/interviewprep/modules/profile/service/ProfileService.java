@@ -1,6 +1,5 @@
 package com.interviewprep.modules.profile.service;
 
-import org.springframework.stereotype.Service;
 
 import com.interviewprep.modules.profile.dto.ProfileRequestDto;
 import com.interviewprep.modules.profile.dto.ProfileResponseDto;

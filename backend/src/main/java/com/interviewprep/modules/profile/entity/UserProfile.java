@@ -1,6 +1,5 @@
 package com.interviewprep.modules.profile.entity;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import org.hibernate.annotations.CreationTimestamp;

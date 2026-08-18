@@ -6,7 +6,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.springframework.cglib.core.Local;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,8 +17,8 @@ import com.interviewprep.modules.roadmap.entity.UserRoadmap;
 import com.interviewprep.modules.roadmap.repository.UserRoadmapRepository;
 import com.interviewprep.modules.skilltracker.dto.DayToggleRequest;
 import com.interviewprep.modules.skilltracker.dto.SkillTrackerOverviewDto;
-import com.interviewprep.modules.skilltracker.dto.weekProgressDto;
-import com.interviewprep.modules.skilltracker.dto.weekProgressDto.DayDto;
+import com.interviewprep.modules.skilltracker.dto.WeekProgressDto;
+import com.interviewprep.modules.skilltracker.dto.WeekProgressDto.DayDto;
 import com.interviewprep.modules.skilltracker.entity.DayProgress;
 import com.interviewprep.modules.skilltracker.mapper.SkillTrackerMapper;
 import com.interviewprep.modules.skilltracker.repository.DayProgressRepository;
@@ -33,14 +32,14 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class SkillTrackerServiceImpl implements SkillTrackerService {
         
-  private final int DAYS_PER_WEEK = 7;
+  private static final int DAYS_PER_WEEK = 7;
   private final UserRoadmapRepository userRoadmapRepository;
   private final DayProgressRepository dayProgressRepository;
   private final SkillTrackerMapper skillTrackerMapper;
   private final ObjectMapper objectMapper;
   @Override
   @Transactional
-  public weekProgressDto getWeekProgress(Long userId, Integer weekNumber) {
+  public WeekProgressDto getWeekProgress(Long userId, Integer weekNumber) {
               UserRoadmap roadmap = getActiveRoadmap(userId);
               RoadmapTemplate template  = roadmap.getRoadmapTemplate();
               JsonNode week = weekNode(template,weekNumber);
@@ -50,7 +49,7 @@ public class SkillTrackerServiceImpl implements SkillTrackerService {
              List<DayDto> days = new ArrayList<>();
              long completed =0;
              for(DayProgress dp : progress){
-               DayDto day = skillTrackerMapper.tDayDto(dp);
+               DayDto day = skillTrackerMapper.toDayDto(dp);
                day.setTopic(dayTopics.get(dp.getDayNumber()));
                days.add(day);
                if(Boolean.TRUE.equals(dp.getIsCompleted())){
@@ -59,7 +58,7 @@ public class SkillTrackerServiceImpl implements SkillTrackerService {
              }
              double progressPercent = round2((double)completed/DAYS_PER_WEEK*100);
              
-             return weekProgressDto.builder().weekNumber(weekNumber).weekTitle(weekTitle).days(days).progressPercent(progressPercent).build();
+             return WeekProgressDto.builder().weekNumber(weekNumber).weekTitle(weekTitle).days(days).progressPercent(progressPercent).build();
              
              
 
@@ -108,7 +107,7 @@ return existing;
       plan = objectMapper.readTree(template.getWeeklyPlan());
     }
     catch(Exception ex){
-      throw new BadRequestException("Roadmap paln couldnot be read ");
+      throw new BadRequestException("Roadmap plan could not be read.");
     }
     if(weekNumber<1 || weekNumber>plan.size()){
       throw new BadRequestException("Invalid week number: " + weekNumber
@@ -148,7 +147,7 @@ boolean nowCompleted = !Boolean.TRUE.equals(day.getIsCompleted());
  DayProgress saved = dayProgressRepository.save(day);
  log.info("Toggled day (userRoadmap={}, week={}, day={}) -> completed={}",
                 roadmap.getId(), request.getWeekNumber(), request.getDayNumber(), nowCompleted);
-                DayDto dto = skillTrackerMapper.tDayDto(saved);
+                DayDto dto = skillTrackerMapper.toDayDto(saved);
                 dto.setTopic(dayTopics.get(saved.getDayNumber()));
                 return dto;
 
@@ -158,10 +157,10 @@ boolean nowCompleted = !Boolean.TRUE.equals(day.getIsCompleted());
   public SkillTrackerOverviewDto getOverview(Long userId) {
      UserRoadmap roadmap = getActiveRoadmap(userId);
      int totalWeeks =roadmap.getRoadmapTemplate().getDurationWeeks();
-     int totalDays = totalWeeks*7;
+     int totalDays = totalWeeks * DAYS_PER_WEEK;
      long completedDays = dayProgressRepository.countByUserRoadmapIdAndIsCompletedTrue(roadmap.getId());
      double progressPercent = totalDays== 0? 0.0 :round2((double)completedDays/totalDays*100);
-     int currentWeek =(int)Math.min(totalWeeks,completedDays/7 + 1);
+     int currentWeek =(int)Math.min(totalWeeks,completedDays / DAYS_PER_WEEK + 1);
               return SkillTrackerOverviewDto.builder()
               .totalWeeks(totalWeeks)
               .totalDays(totalDays)

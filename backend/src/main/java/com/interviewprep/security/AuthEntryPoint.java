@@ -28,7 +28,7 @@ public class AuthEntryPoint implements AuthenticationEntryPoint {
   ) throws IOException{
     response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
     response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-    ApiResponse<Object> body =ApiResponse.error("Authentication required.Please provide valid access token");
+    ApiResponse<Object> body =ApiResponse.error("Authentication required. Please provide a valid access token.");
     objectMapper.writeValue(response.getWriter(), body);
   }
     

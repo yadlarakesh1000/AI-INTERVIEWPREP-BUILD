@@ -33,7 +33,7 @@ public class JwtTokenProvider {
    public String generateAccessToken(String email,Long userId){
        Date now = new Date();
        Date expiry = new Date(now.getTime()+accessTokenExpirationMs);
-       return Jwts.builder().subject(email).claim("UserId", userId).issuedAt(now).expiration(expiry).signWith(key,Jwts.SIG.HS256).compact();
+       return Jwts.builder().subject(email).claim("userId", userId).issuedAt(now).expiration(expiry).signWith(key,Jwts.SIG.HS256).compact();
    }
    public String generateRefreshToken(){
     byte[] randomBytes = new byte[64];
@@ -48,7 +48,7 @@ public class JwtTokenProvider {
             parseClaims(token);
             return true;
            } catch(Exception ex){
-            log.warn("Invalid Jwt token:{}",ex.getMessage());
+            log.warn("Invalid JWT token: {}",ex.getMessage());
             return false;
            }
    }
@@ -56,7 +56,7 @@ public class JwtTokenProvider {
     return parseClaims(token).getPayload().getSubject();
    }
    public Long getUserIdFromToken(String token){
-      Number userId = parseClaims(token).getPayload().get("UserId",Number.class);
+      Number userId = parseClaims(token).getPayload().get("userId", Number.class);
       return userId==null?null:userId.longValue();
    }
    private Jws<Claims> parseClaims(String token){

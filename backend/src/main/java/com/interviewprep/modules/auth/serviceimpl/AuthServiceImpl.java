@@ -1,4 +1,4 @@
-package com.interviewprep.modules.auth.serviceImpli;
+package com.interviewprep.modules.auth.serviceimpl;
 
 import com.interviewprep.modules.auth.repository.RefreshTokenRepository;
 
@@ -45,8 +45,8 @@ public class AuthServiceImpl implements AuthService{
   public AuthResponse register(RegisterRequest request) {
     
     if(Boolean.TRUE.equals(userRepository.existsByEmail(request.getEmail()))){
-      log.warn("Registration attempt with existing email:{}",request.getEmail());
-      throw new DataIntegrityViolationException("Email is already Registered");
+      log.warn("Registration attempt with existing email: {}", request.getEmail());
+      throw new DataIntegrityViolationException("Email is already registered");
     }
     User user =  User.builder()
                       .email(request.getEmail()).password(passwordEncoder.encode(request.getPassword()))
@@ -70,14 +70,14 @@ public class AuthServiceImpl implements AuthService{
       authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword()));
     }
     catch(AuthenticationException ex){
-       log.warn("Logging failed invalid email:{}",request.getEmail());
-       throw new AuthException("Invalid Email or password");
+       log.warn("Failed login attempt for email: {}",request.getEmail());
+       throw new AuthException("Invalid email or password");
   }
-      User user = userRepository.findByEmail(request.getEmail()).orElseThrow(()->new AuthException("Invalid Email or password"));
+      User user = userRepository.findByEmail(request.getEmail()).orElseThrow(()->new AuthException("Invalid email or password"));
       refreshTokenRepository.deleteByUser(user);
       String accessToken = jwtTokenProvider.generateAccessToken(user.getEmail(),user.getId());
       RefreshToken refreshToken = createRefreshToken(user);
-      log.info("User logged in id={},email={}",user.getId(),user.getEmail());
+      log.info("User logged in id={} email={}", user.getId(), user.getEmail());
       return buildAuthResponse(user,accessToken,refreshToken.getToken());
 }
 
@@ -91,15 +91,15 @@ if(Boolean.TRUE.equals(refreshToken.getIsRevoked())){
 }  
 if(refreshToken.getExpiryDate().isBefore(LocalDateTime.now())){
   refreshTokenRepository.delete(refreshToken);
-  throw new AuthException("RefreshToken Expired");
+  throw new AuthException("Refresh token has expired. Please log in again.");
 } 
 User user = refreshToken.getUser();
    String accessToken = jwtTokenProvider.generateAccessToken(user.getEmail(), user.getId());
    refreshToken.setToken(jwtTokenProvider.generateRefreshToken());
    refreshToken.setExpiryDate(refreshTokenExpiry());
    RefreshToken rotated = refreshTokenRepository.save(refreshToken);
-   log.info("Refresh tokens for user id={},email={}",user.getId(),user.getEmail());
-   return buildAuthResponse(user,accessToken,refreshToken.getToken());
+   log.info("Refreshed tokens for user id={} email={}", user.getId(), user.getEmail());
+   return buildAuthResponse(user,accessToken,rotated.getToken());
   }
 
 

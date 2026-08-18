@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 
 @Data
 @Builder
-public class weekProgressDto {
+public class WeekProgressDto {
      
   private int weekNumber;
   private String weekTitle;

@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.interviewprep.common.ApiResponse;
 import com.interviewprep.modules.skilltracker.dto.DayToggleRequest;
 import com.interviewprep.modules.skilltracker.dto.SkillTrackerOverviewDto;
-import com.interviewprep.modules.skilltracker.dto.weekProgressDto;
+import com.interviewprep.modules.skilltracker.dto.WeekProgressDto;
 import com.interviewprep.modules.skilltracker.service.SkillTrackerService;
 import com.interviewprep.security.SecurityUtils;
 
@@ -24,19 +24,19 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 
 @RestController
-@RequestMapping("api/skill-tracker")
+@RequestMapping("/api/skill-tracker")
 @RequiredArgsConstructor
 public class SkillTrackerController {
      private final SkillTrackerService skillTrackerService;
 
 
      @GetMapping("/week/{weekNumber}")
-     public ResponseEntity<ApiResponse<weekProgressDto>> getWeek(@PathVariable Integer weekNumber) {
+     public ResponseEntity<ApiResponse<WeekProgressDto>> getWeek(@PathVariable Integer weekNumber) {
          Long userId = SecurityUtils.getCurrentUserId();
-         return ResponseEntity.ok(ApiResponse.success("week Progress fetched", skillTrackerService.getWeekProgress(userId, weekNumber)));
+         return ResponseEntity.ok(ApiResponse.success("Week progress fetched", skillTrackerService.getWeekProgress(userId, weekNumber)));
      }
-     @PutMapping("toggle")
-     public ResponseEntity<ApiResponse<weekProgressDto.DayDto>>toggleDay (@Valid @RequestBody DayToggleRequest request) {
+     @PutMapping("/toggle")
+     public ResponseEntity<ApiResponse<WeekProgressDto.DayDto>>toggleDay (@Valid @RequestBody DayToggleRequest request) {
          Long userId = SecurityUtils.getCurrentUserId();
          return ResponseEntity.ok(ApiResponse.success("Day updated",
                 skillTrackerService.toggleDay(userId, request)));

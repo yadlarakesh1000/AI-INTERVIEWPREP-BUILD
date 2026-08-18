@@ -1,9 +1,9 @@
-package com.interviewprep.modules.Interview.mapper;
+package com.interviewprep.modules.interview.mapper;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import com.interviewprep.modules.Interview.dto.InterviewSummaryDto;
-import com.interviewprep.modules.Interview.entity.Interview;
+import com.interviewprep.modules.interview.dto.InterviewSummaryDto;
+import com.interviewprep.modules.interview.entity.Interview;
 
 @Mapper(componentModel = "spring")
 public interface InterviewMapper {

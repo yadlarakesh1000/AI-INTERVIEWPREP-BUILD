@@ -67,7 +67,7 @@ public class RoadmapServiceImpl implements RoadmapService {
           return root;
        }
        catch(Exception ex){
-        log.warn("",ex);
+        log.warn("Failed to parse stored roadmap JSON; returning null", ex);
           return null;
        }
 
@@ -95,7 +95,7 @@ if (existingRoadmap.isPresent()) {
 UserRoadmap userRoadmap = userRoadmapRepository.findByUserIdAndRoadmapTemplateIdOrderByIdAsc(userId, template.getId()).stream().findFirst().orElse(null);
 if(userRoadmap==null){
    User user = userRepository.findById(userId).orElseThrow(()->new ResourceNotFoundException("User", "id", userId));
-      userRoadmap.builder().user(user).roadmapTemplate(template).selectedDurationWeeks(request.getSelectedDurationWeeks()).isActive(true).build();
+     userRoadmap= UserRoadmap.builder().user(user).roadmapTemplate(template).selectedDurationWeeks(request.getSelectedDurationWeeks()).isActive(true).build();
 }
 else{
   userRoadmap.setSelectedDurationWeeks(request.getSelectedDurationWeeks());

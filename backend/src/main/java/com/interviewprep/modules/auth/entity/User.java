@@ -36,11 +36,11 @@ false, length = 50)
    @Column(name = "last_name", nullable =
 false, length = 50)
    private String lastName;
-   @Column(length = 10)
+   @Column(length = 15)
    private String phone;
   @Builder.Default
   @Column(name ="is_active")
-   private boolean isActive=true;
+   private Boolean isActive = true;
    @CreationTimestamp
    @Column(name =
 "created_at", updatable = false)

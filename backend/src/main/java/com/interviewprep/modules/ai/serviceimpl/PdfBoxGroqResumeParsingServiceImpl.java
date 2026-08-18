@@ -31,7 +31,7 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 @RequiredArgsConstructor
 public class PdfBoxGroqResumeParsingServiceImpl implements ResumeParsingService {
-    private static final double PARSE_TEMPARATURE=0.1;
+    private static final double PARSE_TEMPERATURE=0.1;
   private static final  String STRICTER_SUFFIX	="\n\nIMPORTANT: Respond with ONLY minified, valid JSON matching the exact keys above. No markdown, no backticks, no commentary.";
 
           private final GroqConfig groqConfig;
@@ -46,7 +46,7 @@ public class PdfBoxGroqResumeParsingServiceImpl implements ResumeParsingService 
       }
       String prompt =buildPrompt(extractedText);
       try{
-       return parsedResumeJson(callGroqChat(prompt));
+       return parseResumeJson(callGroqChat(prompt));
         
       }
       catch(Exception ex){
@@ -54,7 +54,7 @@ public class PdfBoxGroqResumeParsingServiceImpl implements ResumeParsingService 
       }
       try{
           String strictPrompt = prompt+STRICTER_SUFFIX;
-         return parsedResumeJson(callGroqChat(strictPrompt));
+         return parseResumeJson(callGroqChat(strictPrompt));
           
       } 
       catch(Exception ex){
@@ -92,7 +92,7 @@ public class PdfBoxGroqResumeParsingServiceImpl implements ResumeParsingService 
                 }""".formatted(extractedText);
    }
 
-   private ResumeData parsedResumeJson(String content) throws Exception{
+   private ResumeData parseResumeJson(String content) throws Exception{
     JsonNode root = objectMapper.readTree(extractJsonObject(content));
     List<String> skills = readStringList(root.path("skills"));
     List<ProjectInfo>projects  = readProjects(root.path("projects"));
@@ -181,7 +181,7 @@ public class PdfBoxGroqResumeParsingServiceImpl implements ResumeParsingService 
           messages.add(Map.of("role","user","content",userContent));
           Map<String,Object> body = Map.of(
                                  "model",groqConfig.getModel(),
-                                 "temperature",PARSE_TEMPARATURE,
+                                 "temperature",PARSE_TEMPERATURE,
                                  "response_format",Map.of("type","json_object"),
                                  "messages",messages
           );
@@ -211,7 +211,7 @@ public class PdfBoxGroqResumeParsingServiceImpl implements ResumeParsingService 
                         throw new BadRequestException("AI service temporarily unavailable. Please try again in a moment.");
           }
         
-;    }
+    }
   
 }
 private String extractMessageContent(String responseBody) {
