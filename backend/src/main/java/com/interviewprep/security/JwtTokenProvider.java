@@ -1,5 +1,6 @@
 package com.interviewprep.security;
 
+import javax.crypto.SecretKey;
 import java.nio.charset.StandardCharsets;
 import java.security.SecureRandom;
 import java.util.Base64;
@@ -17,7 +18,7 @@ import lombok.extern.slf4j.Slf4j;
 @Component
 @Slf4j
 public class JwtTokenProvider {
-   private final javax.crypto.SecretKey key;
+   private final SecretKey key;
    private final long accessTokenExpirationMs;
    private final long refreshTokenExpirationMs;
    private final SecureRandom secureRandom=new SecureRandom();

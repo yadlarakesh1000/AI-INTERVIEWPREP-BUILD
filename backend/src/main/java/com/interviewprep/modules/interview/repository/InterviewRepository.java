@@ -12,4 +12,5 @@ public interface InterviewRepository extends JpaRepository<Interview,Long> {
       List<Interview> findTop5ByUserIdAndStatusOrderByCreatedAtDesc(Long userId,String status);
      List<Interview> findByUserIdAndStatusOrderByCreatedAtAsc(Long userId,String status);
      Optional<Interview> findByUserIdAndStatus(Long userId,String status);
+     long countByUserIdAndStatus(Long userId,String status);
 }
